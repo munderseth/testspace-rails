@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="F2" tests="3" time="0.00050258" failures="0" errors="0" skipped="0" timestamp="2015-06-03T20:45:52+00:00">
+  <testcase name="A passing test" time="9.6523e-05">
+  </testcase>
+  <testcase name="A failing test" time="6.263e-05">
+  </testcase>
+  <testcase name="A pending test" time="9.6973e-05">
+  </testcase>
+</testsuite>

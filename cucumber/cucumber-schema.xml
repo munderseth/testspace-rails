@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema version="1.0" manual="0">
+  <root>
+    <attributes>
+      <![CDATA[#
+#
+# Creating User-defined Schema variables
+#
+
+run    = rake cucumber FEATURE=./features
+output = echo "$PWD/features/reports/*.xml"]]>
+    </attributes>
+    <folder name="f1" state="1">
+      <attributes>
+        <![CDATA[#.sh
+${run}/${self.name}
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+    <folder name="f2" state="1">
+      <attributes>
+        <![CDATA[#.sh
+${run}/${self.name}
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+  </root>
+</schema>

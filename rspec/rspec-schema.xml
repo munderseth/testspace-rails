@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema version="1.0" manual="0">
+  <root>
+    <attributes>
+      <![CDATA[#
+# more general approach for multiple files (i.e. 2+ Suites difined within a single file)
+suite.id = rake rspec spec SPEC=./spec/${suite.name} ; ls -1a ./spec/reports/*.xml > "${suite.result}"
+
+
+#
+# Creating User-defined Schema variables
+#
+run    = rake rspec spec SPEC=./spec
+output = echo "$PWD/spec/reports/*.xml"]]>
+    </attributes>
+    <folder name="Controllers" state="1" description="Example **Controllers** tests">
+      <attributes>
+        <![CDATA[#.sh
+${run}/controllers/*.rb
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+    <folder name="Requests" state="1" description="Example **Requests** tests">
+      <attributes>
+        <![CDATA[#.sh
+${run}/requests/*.rb
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+    <suite name="example_spec.rb" state="1" description="Example test within a _runnable_ Suite"/>
+  </root>
+</schema>

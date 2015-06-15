@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema version="1.0" manual="0">
+  <root>
+    <attributes>
+      <![CDATA[#
+#
+# Using system Schema variable (note- hard coded to use the "integration" folder :<)
+#   
+suite.id = rake minitest test TEST=./test/integration/${suite.name} ; mv ./test/reports/*.xml "${suite.result}"
+
+
+#
+# Creating User-defined Schema variables
+#
+
+run    = rake minitest test TEST=./test
+output = echo "$PWD/test/reports/*.xml"]]>
+    </attributes>
+    <folder name="Controller" state="1" description="Example **Controller** tests">
+      <attributes>
+        <![CDATA[#.sh
+${run}/controllers/*.rb
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+    <folder name="Integration" state="1" description="Example **Integration** tests">
+      <attributes>
+        <![CDATA[#.sh
+${run}/integration/*.rb
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+    <suite name="intg_test.rb" state="1" description="Example **Integration** test within a _runnable_ Suite"/>
+    <folder name="Other" state="1" description="Some **Other** examples">
+      <attributes>
+        <![CDATA[#.sh
+${run}/other/*.rb
+${output} > ${self.result}]]>
+      </attributes>
+    </folder>
+  </root>
+</schema>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="f2_test" tests="3" time="0.03914237" failures="1" errors="0" skipped="0" timestamp="2015-06-03T19:21:15+00:00">
+  <testcase name="should pass1" time="0.000457594">
+  </testcase>
+  <testcase name="should fail2" time="0.00064393">
+    <failure type="RuntimeError" message="Failure!">
+Failure! (RuntimeError)
+./features/f2/f2_steps.rb:5:in `/^it fails$/'
+./features/f2/f2_test.feature:7:in `Then it fails'    </failure>
+  </testcase>
+  <testcase name="should pend3 (PENDING)" time="0.000538857">
+  </testcase>
+</testsuite>
