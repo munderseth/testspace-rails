@@ -1,0 +1,417 @@
+## Initial Setup
+
++ Create _cucumber_ sample app ( [setup](Setup) )
+
++ Gemfile updates in the test section
+
+        group :test do
+           gem 'cucumber-rails', :require => false
+           gem 'database_cleaner'
+           gem 'ci_reporter_cucumber'
+        end
+   
++ Next run
+
+        bundle install
+
++ Update Rakefile for CI Reporter
+
+        # CI::Reporter RSpec task
+        require 'ci/reporter/rake/cucumber'
+
+        task :cucumber => 'ci:setup:cucumber'
+
++ Setup RSpec with rails
+
+         rails generate cucumber:install
+
+
+## Console Execution
+
++ Add some example tests under `./cucumber/features
+
++ Console runs (using our sample)
+
+         $ cucumber features/f1
+         $ cucumber features/f2
+   
+
++ To run with CI_Reporter Rakefile  (`FEATURE` environment variable)
+
+         $ rake cucumber FEATURE=./features/f1
+        
++ Note - can't run "all" from the ./features folder for some reason. The `steps` are searched within the folder and all sub-folders. You can use `-r path` to includes `steps` from other locations. 
+
+<hr>
+
+## Test Format
+Cucumber is a test framework that allows text to be used for describing how the software should work.  For detailed information refer to the [Cucumber website](http://cukes.info). The main focus for Cucumber is for Ruby applications (i.e. RoR). The basic concept is for a now-techie to write what features should be tested using the natural language (based on [Gerkins](https://github.com/cucumber/cucumber/wiki/Gherkin)) and than a techie type implements the features using steps. This decouples specifying features from implementation details. 
+
+### Basic Structure 
+Create a *features* directory which will be searched for a **Feature** token.  The name following represents a Suite. Following is 1 or more **Scenario** tokens that represent Cases associated with the Feature.  
+
+### Example Feature file (example1.feature)
+
+<pre>
+Feature: MyFeature1
+	In order to spread Testspace
+	The usage of CuCumber might be needed
+	
+Scenario: The simple example test
+	Given I have steps
+	Then I might have failures
+	
+Scenario: One more example test
+	Given I have steps
+</pre>
+
+### step_definitions directory
+A step directory contains the test implementation .. called **steps** and are matched using regular expressions. The implementation uses Ruby.
+
+### Example Steps (example1_steps.rb)
+<pre>
+Given /^I have steps$/ do 
+  puts "Yes, this is working."
+end
+
+Then /^I might have failures$/ do 
+  #raise "FAIL" 
+  puts "nope not failing now"
+end
+
+</pre>
+
+
+
+
+
+## ci_reporter
+
++ Reference:https://github.com/ci-reporter/ci_reporter 
++ At startup executes `rm -rf spec/reports`
+
+
+===============================
+
+The following are Rails setup notes:
+
+## Organization 
++ **C9**: https://ide.c9.io/mark_underseth
+   + `testspace-rails` **workspace**
+      + `cucumber` folder
+      + `minitest` folder
+      + `rspec`folder
+      + `spinach` folder
+  
++ **GitHub**: https://github.com/munderseth/
+    + `testspace-rails` **repo**
+      + `cucumber` folder
+      + `minitest` folder
+      + `rspec` folder
+      + `spinach` folder
+
+
++ **Testspace**: http://samples.stridespace.com
+   + `testspace-rails` **project**
+      + `cucumber` space
+      + `minitest` space
+      + `rspec` space
+      + `spinach` space
+
+
+
+
+## Setup
++ For Rails example using the **C9**  _Rails Tutorial_ Workspace setting (Not general Rails)
+
+
++ Start out installing Rails 4.2 (**1st time only**)
+  <pre>
+   gem install rails -v 4.2.0
+  </pre>
+
++ Use following command under the ~/workspace 
+
+        rails _4.2.0_ new Name (i.e. minitest)
+        cd Name
+        rake db:migrate 
+   
+
++ Running Application
+
+        rails server -p $PORT -b $IP 
+
+
++ Update `.gitignore` file 
+
+        # Testspace stuff
+        /fw-name/reports
+
+        /spring/*
+
+        /.testresult.links
+        testresult.xml
+        testresult.html
+
+<hr>
+
+## Ruby Toolbox Categories for Testing 
+
+  + [Unit Test Frameworks](https://www.ruby-toolbox.com/categories/testing_frameworks)
+  + [Browser testing](https://www.ruby-toolbox.com/categories/browser_testing)
+
+  + Ruby Testing tools
+
+     ![alt text](files/tools.png)
+
+
+## Reference articles
+
++ [Capybara](http://jnicklas.github.io/capybara/)
++ [PhantomJS - Headless Testing](http://phantomjs.org/headless-testing.html)
++ [Blog article using Capybara and Pltergeitst/Phantomjs](https://www.amberbit.com/blog/2014/2/12/automate-tasks-on-the-web-with-ruby-and-capybara/)
++ https://www.railstutorial.org/book/frontmatter (rails tutorial)
++ http://rails-3-2.railstutorial.org/book/frontmatter (older version of rails tutorial)
++ http://guides.rubyonrails.org/testing.html 
++ https://github.com/ci-reporter (CI reporting GEM for different frameworks)
+
+====================================
+The following articles are for the Rails samples:
+ + [General Information](General)
+ + [Minitest Information] (Minitest)
+ + [RSpec Information] (RSpec)
+ + [Cucumber Information] (Cucumber)
+ + [Spinach Information] (Spinach)
+ + [Rails Tutorial](Tutorial)
+
+==============================
+## Initial Setup 
+
++ Create _cucumber_ sample app ( [setup](Setup) )
+ 
++ Gem update `gem 'ci_reporter_minitest` 
+
++ Next run
+ 
+        bundle install
+
++ Rake update
+  <pre>
+    require 'ci/reporter/rake/minitest'
+   
+    task  :minitest => 'ci:setup:minitest'
+  </pre>
+
+## Console Execution
+
++ Each defined class creates a unique Test Suite result (including a xml file)
++ To run directly with Rake using console (note that `TEST` is an environment variable)
+
+        $ rake test
+        $ rake test TEST=./test/folder/*.rb  -v  (-v provides more console output)
+
++ Or the following [approach](http://guides.rubyonrails.org/testing.html#rake-tasks-for-running-your-tests)
+
+        $ rake test
+        $ rake test:controllers
+        $ rake test:integration -v
+
++ To run with CI_Reporter Rake option 
+
+        $ rake minitest test
+        $ rake minitest test TEST=./test/folder/*.rb 
+
+# Reference articles
+
++ http://chriskottom.com/blog/2014/12/command-line-flags-for-minitest-in-the-raw/ (example options)
++ http://ruby-doc.org/stdlib-2.1.0/libdoc/minitest/rdoc/MiniTest.html (test format)
+
+# Format Reporters
+ 
++ https://github.com/ci-reporter/ci_reporter_minitest
++ https://github.com/kern/minitest-reporters (reporters for MiniTest)
++ https://github.com/bhenderson/minitest-ci
+
+#  Notes
+
++ At startup the CI_reporter executes `rm -rf test/reports`
++ a TestCase is a Class / Suite
++ uses the defined "Class" for the xml file generation name
++ 2 classes within 1 file will generate 2 xml files
++ supports regular expressions for case names ( --name /../)
++ can run folders (good mapping to Runnable folders)
++ Don't know how/possible to run a script and select 1 of many TestCases (Suites)
+
+=====================
+## Initial Setup
+
++ Create _cucumber_ sample app ( [setup](Setup) )
+
++ Gemfile updates in the test section
+
+        group :test do
+           gem 'rspec-rails'
+           gem 'ci_reporter_rspec'
+           gem 'capybara'
+        end
+
++ Next run
+
+        bundle install
+
++ Update Rakefile for CI Reporter
+
+        require 'ci/reporter/rake/rspec'     
+
+        task :rspec => 'ci:setup:rspec' 
+
++ Setup RSpec with rails
+
+         rails generate rspec:install
+
+
+## Console Execution
+
++ Add some example tests under `./rspec/spec/controller` using **_spec.rb** suffix
+
++ Console runs (rspec -h)
+
+         $ rspec path/to/a_spec.rb[:n]
+         $ rspec spec
+         $ rspec spec/c*  - (runs controllers)
+
++ To run with CI_Reporter Rakefile  (`SPEC` environment variable)
+
+         $ rake rspec spec SPEC=./spec
+         $ rake rspec spec SPEC=./spec/c* 
+
+<hr>
+
+## ci_reporter
+
++ Reference:https://github.com/ci-reporter/ci_reporter 
++ At startup executes `rm -rf spec/reports`
++ Used for Testspace 
++ Creates a Suite for each *Describe* that contains a test case `it "stuff" `
++ Nested *Describes* only generate a single Suite, but the name includes full namespace
++ A Describe with not `it "stuff" ` will **not** generated a Suite
+
+
+## rspec_junit_formatter
+
++ Reference:https://github.com/sj26/rspec_junit_formatter
++ Collects all test cases within all files and creates one Suite called *rspec*
++ Need to add the *rspec_junit_formatter* gem
++ I added `--format RspecJunitFormatter` to the *.rspec* file (actually removed this for now)
++ No __need__ to remove old result files. Using `--out $(self.result)`
+
+==========================
+## Initial Setup
+
++ Create _spinach_ sample app ( [setup](Setup) )
+
++ Gemfile updates in the test section
+
+        group :development, :test do
+          ..   
+          gem 'spinach'
+          gem 'ci_reporter_spinach'
+        end
+   
++ Next run
+
+        bundle install
+
++ Update Rakefile for CI Reporter
+
+        # CI::Reporter RSpec task
+         require 'ci/reporter/rake/spinach'
+
+         task :spinach do
+            exec "spinach -r ci_reporter"
+         end
+
+         task :spinach => 'ci:setup:spinach'
+
+         task :default => :spinach
+
++ Update `.gitignore` file (same as cucumber)
+
+## Console Execution
+
++ Add some example tests under `./spinach/features
+
++ Console runs (using our sample)
+
+         $ cucumber features/f1
+         $ cucumber features/f2
+   
++ To run with CI_Reporter Rakefile  (`FEATURE` environment variable)
+
+         $ rake spinach FEATURE=./features/f1
+        
++ **ISSUES**
+   + Requires a special folder - `features/support` (auto-generated file: "prepare_ci_reporter.rb")
+   + The steps are required at a fixed location (can't separate like cucumber)
+   + Can't figure out how to run folders using rake
+   + Can't `fail` a test
+
+
+<hr>
+
+## Test Format
+
+The test format is similar to Cucumber except the steps are actual ruby methods based on the name of `Then` under the `Scenario`
+
+
+## Reference
+
+  + https://github.com/codegram/spinach
+  + https://github.com/ci-reporter/ci_reporter_spinach
+   ===
+   
+   Using the sample application from Michael Hartl: https://www.railstutorial.org/book/frontmatter
+
+## Setup Application (https://github.com/mhartl/sample_app_3rd_edition)
+
+     $ cd ~/workspace
+     $ git clone https://github.com/mhartl/sample_app_3rd_edition.git tutorial
+     $ cd tutorial
+     $ bundle install
+     $ bundle exec rake db:migrate
+     $ bundle exec rake db:seed
+     $ bundle exec rake test
+ 
+Note that in development mode email does not work (i.e. setup a new account). Will be using (refer to `seeds.rb`)
+
+  Username: `Example User`
+  Email: `example@railstutorial.org`
+  Password: `foobar`
+
+## Code Coverage Setup (https://github.com/colszowka/simplecov)
+
++ Add gem 
+
+        gem 'simplecov', :require => false, :group => :test
+        gem 'ci_reporter_minitest'
+        gem 'capybara'
+   
+
++ Add startup to `test/test_helper.rb`  (or `spec`)
+
+        require 'simplecov'
+        SimpleCov.start 'rails'
+   
+ note, creates a `coverage` folder
+
++ Update Rakefile for minitest
+
+
+
+
+
+
+
+
+   
+
